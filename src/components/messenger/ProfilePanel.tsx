@@ -1,25 +1,23 @@
-export default function ProfilePanel() {
+import { User } from "@/pages/Index";
+
+interface ProfilePanelProps {
+  user: User;
+}
+
+export default function ProfilePanel({ user }: ProfilePanelProps) {
   return (
     <div className="panel-inner">
       <div className="panel-header">
         <h2>Профиль</h2>
       </div>
       <div className="profile-body">
-        <div className="profile-avatar">ВП</div>
-        <h3 className="profile-name">Владимир Павлов</h3>
+        <div className="profile-avatar">{user.avatar}</div>
+        <h3 className="profile-name">{user.display_name}</h3>
         <p className="profile-status">В сети</p>
         <div className="profile-fields">
           <div className="profile-field">
             <span className="field-label">Имя пользователя</span>
-            <span className="field-value">@vladpavlov</span>
-          </div>
-          <div className="profile-field">
-            <span className="field-label">Телефон</span>
-            <span className="field-value">+7 (999) 123-45-67</span>
-          </div>
-          <div className="profile-field">
-            <span className="field-label">О себе</span>
-            <span className="field-value">Всегда на связи</span>
+            <span className="field-value">@{user.username}</span>
           </div>
         </div>
       </div>

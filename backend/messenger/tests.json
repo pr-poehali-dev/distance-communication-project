@@ -1,0 +1,29 @@
+{
+  "tests": [
+    {
+      "name": "Auth - register or login",
+      "method": "POST",
+      "path": "/?action=auth",
+      "body": {"username": "testuser", "display_name": "Тест Юзер"},
+      "expectedStatus": 200,
+      "expectedBody": {},
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Get users list",
+      "method": "GET",
+      "path": "/?action=users",
+      "expectedStatus": 200,
+      "expectedBody": {},
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Get chats - missing user_id returns 400",
+      "method": "GET",
+      "path": "/?action=chats",
+      "expectedStatus": 400,
+      "expectedBody": {},
+      "bodyMatcher": "partial"
+    }
+  ]
+}

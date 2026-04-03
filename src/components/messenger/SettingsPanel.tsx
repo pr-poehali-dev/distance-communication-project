@@ -1,9 +1,14 @@
 import { useState } from "react";
+import { useTheme } from "./ThemeContext";
 
-export default function SettingsPanel() {
+interface SettingsPanelProps {
+  onLogout: () => void;
+}
+
+export default function SettingsPanel({ onLogout }: SettingsPanelProps) {
   const [notifications, setNotifications] = useState(true);
   const [sounds, setSounds] = useState(false);
-  const [theme, setTheme] = useState("light");
+  const { theme, toggle } = useTheme();
 
   return (
     <div className="panel-inner">
@@ -30,19 +35,17 @@ export default function SettingsPanel() {
           </button>
         </div>
         <div className="settings-group">
-          <span className="settings-label">Тема</span>
-          <select
-            className="settings-select"
-            value={theme}
-            onChange={(e) => setTheme(e.target.value)}
+          <span className="settings-label">Тёмная тема</span>
+          <button
+            className={`toggle ${theme === "dark" ? "on" : ""}`}
+            onClick={toggle}
           >
-            <option value="light">Светлая</option>
-            <option value="dark">Тёмная</option>
-          </select>
+            <span className="toggle-thumb" />
+          </button>
         </div>
         <div className="settings-group danger">
           <span className="settings-label">Выйти из аккаунта</span>
-          <button className="settings-btn-danger">Выйти</button>
+          <button className="settings-btn-danger" onClick={onLogout}>Выйти</button>
         </div>
       </div>
     </div>
