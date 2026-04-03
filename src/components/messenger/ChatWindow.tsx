@@ -5,9 +5,10 @@ import Icon from "@/components/ui/icon";
 interface ChatWindowProps {
   chat: Chat;
   onSend: (text: string) => void;
+  onBack?: () => void;
 }
 
-export default function ChatWindow({ chat, onSend }: ChatWindowProps) {
+export default function ChatWindow({ chat, onSend, onBack }: ChatWindowProps) {
   const [text, setText] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -31,6 +32,11 @@ export default function ChatWindow({ chat, onSend }: ChatWindowProps) {
   return (
     <div className="chat-window">
       <div className="chat-window-header">
+        {onBack && (
+          <button className="icon-btn mobile-back-btn" onClick={onBack}>
+            <Icon name="ChevronLeft" size={22} />
+          </button>
+        )}
         <div className="chat-avatar-wrap">
           <div className="chat-avatar sm">{chat.avatar}</div>
           {chat.online && <span className="online-dot" />}
@@ -40,8 +46,6 @@ export default function ChatWindow({ chat, onSend }: ChatWindowProps) {
           <span className="chat-window-status">{chat.online ? "В сети" : "Не в сети"}</span>
         </div>
         <div className="chat-window-actions">
-          <button className="icon-btn"><Icon name="Phone" size={18} /></button>
-          <button className="icon-btn"><Icon name="Video" size={18} /></button>
           <button className="icon-btn"><Icon name="MoreHorizontal" size={18} /></button>
         </div>
       </div>

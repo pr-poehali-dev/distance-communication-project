@@ -57,6 +57,7 @@ export default function Index() {
   const [section, setSection] = useState<Section>("chats");
   const [chats, setChats] = useState<Chat[]>([]);
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
+  const [mobileChatOpen, setMobileChatOpen] = useState(false);
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const lastMsgId = useRef<number>(0);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -141,6 +142,7 @@ export default function Index() {
     setSelectedChat(updated);
     setChats((prev) => prev.map((c) => c.id === chat.id ? { ...c, unread: 0 } : c));
     setSection("chats");
+    setMobileChatOpen(true);
   }, [user, loadMessages]);
 
   const handleStartChat = useCallback(async (target: User) => {
@@ -220,9 +222,11 @@ export default function Index() {
 
   return (
     <div className="messenger-root">
-      <Sidebar section={section} onSectionChange={setSection} />
+      {/* Desktop sidebar */}
+      <Sidebar section={section} onSectionChange={(s) => { setSection(s); setMobileChatOpen(false); }} />
 
-      <div className="messenger-panel">
+      {/* Panel: chat list / contacts / etc — скрывается на мобиле когда чат открыт */}
+      <div className={`messenger-panel ${mobileChatOpen ? "mobile-hidden" : ""}`}>
         {section === "chats" && (
           <ChatList chats={chats} selectedId={selectedChat?.id} onSelect={handleSelectChat} />
         )}
@@ -235,16 +239,48 @@ export default function Index() {
         {section === "settings" && <SettingsPanel onLogout={handleLogout} />}
       </div>
 
-      <div className="messenger-main">
+      {/* Main chat area — на мобиле занимает весь экран */}
+      <div className={`messenger-main ${mobileChatOpen ? "mobile-fullscreen" : ""}`}>
         {section === "chats" && selectedChat ? (
-          <ChatWindow chat={selectedChat} onSend={handleSendMessage} />
+          <ChatWindow
+            chat={selectedChat}
+            onSend={handleSendMessage}
+            onBack={() => setMobileChatOpen(false)}
+          />
         ) : (
-          <div className="empty-state">
+          <div className="empty-state desktop-only">
             <div className="empty-icon">✦</div>
             <p>Выберите чат для начала общения</p>
           </div>
         )}
       </div>
+
+      {/* Мобильная нижняя навигация */}
+      <MobileNav section={section} onSectionChange={(s) => { setSection(s); setMobileChatOpen(false); }} />
     </div>
+  );
+}
+
+function MobileNav({ section, onSectionChange }: { section: Section; onSectionChange: (s: Section) => void }) {
+  const items: { id: Section; label: string; emoji: string }[] = [
+    { id: "chats", label: "Чаты", emoji: "💬" },
+    { id: "contacts", label: "Люди", emoji: "👥" },
+    { id: "search", label: "Поиск", emoji: "🔍" },
+    { id: "notifications", label: "Звонки", emoji: "🔔" },
+    { id: "settings", label: "Ещё", emoji: "⚙️" },
+  ];
+  return (
+    <nav className="mobile-nav">
+      {items.map((item) => (
+        <button
+          key={item.id}
+          className={`mobile-nav-btn ${section === item.id ? "active" : ""}`}
+          onClick={() => onSectionChange(item.id)}
+        >
+          <span className="mobile-nav-emoji">{item.emoji}</span>
+          <span className="mobile-nav-label">{item.label}</span>
+        </button>
+      ))}
+    </nav>
   );
 }

@@ -97,6 +97,7 @@
   grid-template-columns: 64px 300px 1fr;
   height: 100vh;
   background: var(--m-bg);
+  position: relative;
 }
 
 .messenger-panel {
@@ -112,6 +113,127 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+
+.mobile-nav {
+  display: none;
+}
+
+/* ─── Mobile ──────────────────────────────────── */
+@media (max-width: 768px) {
+  body {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+  }
+
+  #root {
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  .messenger-root {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  /* Sidebar скрываем на мобиле */
+  .sidebar {
+    display: none;
+  }
+
+  /* Панель занимает всю ширину */
+  .messenger-panel {
+    grid-column: 1;
+    grid-row: 1;
+    border-right: none;
+    padding-bottom: 60px;
+  }
+
+  .messenger-panel.mobile-hidden {
+    display: none;
+  }
+
+  /* Чат-окно скрыто пока не выбран чат */
+  .messenger-main {
+    display: none;
+  }
+
+  .messenger-main.mobile-fullscreen {
+    display: flex;
+    grid-column: 1;
+    grid-row: 1;
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: var(--m-bg);
+    padding-bottom: 0;
+  }
+
+  .desktop-only {
+    display: none;
+  }
+
+  /* Нижняя навигация */
+  .mobile-nav {
+    display: flex;
+    grid-column: 1;
+    grid-row: 2;
+    background: var(--m-surface);
+    border-top: 1px solid var(--m-border);
+    padding: 6px 0 env(safe-area-inset-bottom, 6px);
+    z-index: 50;
+  }
+
+  .mobile-nav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 6px 4px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: var(--m-muted);
+    transition: color 0.15s;
+  }
+
+  .mobile-nav-btn.active {
+    color: var(--m-text);
+  }
+
+  .mobile-nav-emoji {
+    font-size: 20px;
+    line-height: 1;
+  }
+
+  .mobile-nav-label {
+    font-size: 10px;
+    font-family: "Golos Text", sans-serif;
+    font-weight: 500;
+  }
+
+  .mobile-back-btn {
+    margin-right: 4px;
+  }
+
+  /* Увеличиваем зону тапа на мобиле */
+  .chat-item {
+    padding: 12px;
+    min-height: 64px;
+  }
+
+  .msg-input {
+    font-size: 16px; /* предотвращает zoom на iOS */
+  }
+
+  .input-area {
+    padding-bottom: max(14px, env(safe-area-inset-bottom));
+  }
 }
 
 /* ─── Sidebar ─────────────────────────────────── */
